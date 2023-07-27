@@ -1,3 +1,5 @@
+Jenode Nakamoto
+
 # DokiCupid  (°◡° ♡)
 
 ### [Live Link](https://dokicupid.herokuapp.com/)
@@ -11,6 +13,15 @@ DokiCupid features **user profiles, matchmaking, filtered search, and instant-me
 This application utilizes Rails and Postgres on the back-end, and React/Redux to manage the front-end. 
 
 *Note: DokiCupid was a two-week project submitted as part of App Academy's full-stack curriculum.*
+アニメキャラクター向けにデザインされたデートアプリ** DokiCupid**へようこそ！
+
+DokiCupidは人気の出会い系サイトOkCupidのレプリカです。
+
+DokiCupidは、**ユーザープロファイル、マッチメイキング、フィルタリングされた検索、ユーザー間のインスタントメッセージング**機能を提供します。
+
+このアプリケーションは、バックエンドでRailsとPostgresを使用し、フロントエンドを管理するためにReact / Reduxを使用します。
+
+*注：DokiCupidは、App Academy全体のスタックカリキュラムの一部として提出された2週間のプロジェクトでした。 *
 
 ![splash page](https://dokicupid-seeds.s3-us-west-1.amazonaws.com/splash.png)
 
@@ -40,6 +51,7 @@ This application utilizes Rails and Postgres on the back-end, and React/Redux to
 
 ## Homepage (Doubletake)
 After logging in, users are greeted with the **Doubletake** page which displays profile previews for users that the current user has not yet matched with. Users can see their match percentage with each displayed user and have the option to visit that user's profile. 
+ログインすると、現在のユーザーとまだ一致していないユーザーのプロフィール プレビューを表示する **Doubletake** ページが表示されます。 ユーザーには、表示された各ユーザーとの一致率を表示し、そのユーザーのプロファイルにアクセスするオプションがあります。
 
 ![home page](https://dokicupid-seeds.s3-us-west-1.amazonaws.com/homepage_2.png)
 
@@ -54,7 +66,13 @@ The **Search** page allows a user to filter prospective matches by tags includin
 ![explore page](https://dokicupid-seeds.s3-us-west-1.amazonaws.com/explore_search_2.png)
 
 A majority of my React components relied on knowing who the current user was already matched with, who they had previously "liked", and which users had "liked" them, in order to decide which information would be displayed. If the state did not already hold this information, a `GET` request was made to `/api/matches`.
+**検索**ページには、現在のユーザーとまだ一致していないユーザーのすべてのユーザープロファイルのプレビューが、各ユーザーとの距離と互換性の評価とともに表示されます。
 
+**検索**ページを使用すると、特定の性格属性、性別の識別、および他のユーザーが、このアプリで「検索」項目を含むタグで予想される一致をフィルタリングできます。 一度に複数のタグを指定できます。結果には、これらすべての要件を満たすユーザーが表示されます。 ユーザーは、互換性の割合に応じて昇順または降順でこれらの結果を並べ替えることもできます。
+
+![探索ページ](https://dokicupid-seeds.s3-us-west-1.amazonaws.com/explore_search_2.png)
+
+ほとんどのReactコンポーネントは、現在のユーザーがすでに一致している人、以前に「良い」人、「良い」人を知って表示する情報を決定することに頼っていました。 状態がこの情報をまだ保持していない場合は、 `/api/matches` に対して `GET` 要求が行われました。
 ```ruby
 # app/controllers/api/matches_controller.rb
 class Api::MatchesController < ApplicationController
@@ -96,6 +114,9 @@ end
 When visiting one's own profile page, a user can choose to view, edit, or delete their profile. When editing, users can also attach more photos for their profile or delete any existing photos.
 
 When users visit other users' profiles, they can "like", or request to be matched with, the user they are viewing. If the requested user chooses to "like" them back, a match is created which allows the two users to send messages to one another. 
+自分のプロフィールページにアクセスすると、ユーザーは自分のプロフィールを表示、編集、削除できます。 編集すると、ユーザーはプロフィールに追加の写真を添付したり、既存の写真を削除したりできます。
+
+ユーザーが他のユーザーのプロフィールにアクセスすると、表示しているユーザーに「いいね」をタップしたり、一致を要求したりできます。 要求されたユーザーが再び「いいね」を選択すると、2人のユーザーが互いにメッセージを送信できる一致が生成されます。
 
 ![profile page](https://dokicupid-seeds.s3-us-west-1.amazonaws.com/profile_page_2.png)
 
@@ -103,12 +124,15 @@ When users visit other users' profiles, they can "like", or request to be matche
 
 ## Matches and Messaging
 At the **Matches** page, users can see who they are currently matched with, who they "liked", and who "liked" them. When two users mutually "like" each other, the match is created, and one of the users can start a conversation with the other on the **Messages** page. Real-time chat between matched users is implemented using Action Cable in Rails. 
+**マッチ**ページでは、ユーザーは現在誰と一致しているのか、誰に「いいね」を押したのか、誰が「いいね」を押したのかを確認できます。 2人のユーザーが互いに「いいね」を表示すると、一致が作成され、ユーザーの1人が**メッセージ**ページで他のユーザーと会話を開始できるようになります。 一致するユーザー間のリアルタイムチャットは、RailsのAction Cableを使用して実装されます。
 
 ![matches and messages](https://dokicupid-seeds.s3-us-west-1.amazonaws.com/matching_messaging_2.png)
 
 
 #### Handling Conversations 
 Because only one conversation should exist in conversations table of the database for a pair of matched users, I wrote a scope method `:between` in the `Conversation` model to be used when attempting to create a conversation at the controller. If one already exists in the database, the existing one is returned; if an existing conversation is not found, the method creates a new conversation between the two users and returns that conversation.
+#### 会話処理
+一致するユーザーのペアについて、データベース会話テーブルには1つの会話しか存在しないため、コントローラで会話を作成しようとしたときに使用する `Conversation`モデルに `：between`スコープメソッドを作成しました。 。 データベースにすでに存在する場合は、既存のエントリが返されます。 既存の会話がない場合、メソッドは2つのユーザー間で新しい会話を作成し、会話を返します。
 
 ```ruby
 # app/controllers/api/conversations_controller.rb
@@ -141,6 +165,10 @@ end
 One of the more challenging areas of this project was configuring Action Cable for real-time messaging.
 
 In `MessagesChannel`, I defined a method `create` that takes in data and creates a message in the database with that data. Then, it broadcasts the `socket` object to the `"messages_channel"` referenced in the `subscribed` method.
+####リアルタイムメッセージング
+このプロジェクトで最も困難な分野の1つは、リアルタイムメッセージング用のアクションケーブルを設定することでした。
+
+`MessagesChannel`からデータを取得し、そのデータでデータベースにメッセージを生成する`create`メソッドを定義しました。 次に、 `subscribed`メソッドが参照する `` messages_channel ''に `socket`オブジェクトをブロードキャストします。
 
 ```ruby
 # app/channels/messages_channel.rb
@@ -213,10 +241,24 @@ I also defined a method `create` on `this.messages` which calls `handleSendEvent
 
 ### Future Directions
 1. Display errors for Profile Form create/edit, and other relevant errors (only login/signup errors currently)
-1. Use Google Maps API for accurate distance calculation
-1. Add more personality quiz questions for more specific compatibility ratings
-1. Notifications for new messages, matches, and likes
-1. Sign up by email and validate email before using site
-#   M y - D a t e - A P P  
- #   M y - D a t e - A P P  
+2. Use Google Maps API for accurate distance calculation
+3. Add more personality quiz questions for more specific compatibility ratings
+4. Notifications for new messages, matches, and likes
+5. Sign up by email and validate email before using site
+
+   また、新しい to-be-sent メッセージで `handleSendEvent` を呼び出す `this.messages` に `create` メソッドを定義しました。 ユーザーがEnterキーを押すか、送信ボタンをクリックしてメッセージを送信すると、 `MessagesChannel`の `create`メソッドに送信したい `messageContent`を渡す `create`関数が呼び出されます。
+
+---
+
+###将来の方向
+1.プロファイルフォームの作成/編集エラーおよびその他の関連エラーの表示（現在のログイン/登録エラーのみ）
+2. 正確な距離計算に Google Maps API を使用する
+3. より具体的な相性評価のためのより個性クイズ質問を追加
+4. 新しいメッセージ、マッチ、良い通知
+5. サイト利用前メールで会員登録及びメール認証
+#   M y - D a t e - A P P 
+ 
+ #   M y - D a t e - A P P 
+kakashinakamoto0822@gmail.com
+ 
  
